@@ -1,8 +1,8 @@
 package de.olihock.drones.tello.commands;
 
-
-import de.olihock.drones.tello.AbstractCommand;
-import de.olihock.drones.tello.TelloClient;
+import de.olihock.drones.DroneCommand;
+import de.olihock.drones.DroneException;
+import de.olihock.drones.tello.TelloReceiver;
 import de.olihock.drones.tello.responses.BinaryResponse;
 
 import java.io.IOException;
@@ -10,17 +10,25 @@ import java.io.IOException;
 /**
  * Tello auto takeoff
  */
-public class TakeoffCommand extends AbstractCommand {
+public class TakeoffCommand implements DroneCommand {
 
-    protected TakeoffCommand(TelloClient client) {
-        super(client);
+    TelloReceiver receiver = null;
+
+    protected TakeoffCommand(TelloReceiver receiver) {
+        this.receiver = receiver;
     }
 
     @Override
-    protected BinaryResponse execute() throws IOException {
-        String result = client.sendAndReceive("takeoff");
-        return BinaryResponse.valueOf(result.toUpperCase()); // TODO Check for null
-
+    public BinaryResponse execute() throws DroneException {
+        try {
+            String result = receiver.sendAndReceive("takeoff");
+            if(result == null) {
+                throw new DroneException("Receiver sendAndReceive returned null");
+            }
+            return BinaryResponse.valueOf(result.toUpperCase());
+        } catch (IOException e) {
+            throw new DroneException(e);
+        }
     }
 
 }

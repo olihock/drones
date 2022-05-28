@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * The Tello client accesses the Tello drone where to send commands to.
  */
-public class TelloClient {
+public class TelloReceiver {
 
     @Getter
     private final String telloName;
@@ -22,7 +22,7 @@ public class TelloClient {
     private final InetAddress address;
 
 
-    public TelloClient(String telloName) throws SocketException, UnknownHostException {
+    public TelloReceiver(String telloName) throws SocketException, UnknownHostException {
         this.telloName = telloName;
         socket = new DatagramSocket();
         address = InetAddress.getByName(telloName);
